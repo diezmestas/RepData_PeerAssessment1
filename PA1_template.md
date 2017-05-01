@@ -1,9 +1,4 @@
----
-title: "Course Project 1"
-output: 
-  html_document: 
-    keep_md: yes
----
+# Course Project 1
 
 #Loading and preprocessing the data
 Show any code that is needed to
@@ -11,8 +6,8 @@ Show any code that is needed to
 1. Load the data (i.e. **read.csv()** )
 2. Process/transform the data (if necessary) into a format suitable for your analysis
 
-```{r echo = TRUE}
 
+```r
 #We start by checking if the required "activity.csv" file is available in the
 #working directory. #If not, it will be unzipped:
 
@@ -41,7 +36,6 @@ raw_data<- read.csv("activity.csv",
                          na.strings = "NA",
                          colClasses = c("integer", "Date", "integer"),
                          nrows = 17568)
-
 ```
 
 #What is mean total number of steps taken per day?
@@ -51,8 +45,8 @@ For this part of the assignment, you can ignore the missing values in the datase
 2. If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
 3. Calculate and report the mean and median of the total number of steps taken per day
 
-```{r echo = TRUE}
 
+```r
 #Question 1:
 #We create a subset of the data that contains only the rows where no value is
 #missing. This subset will be used in this section as well as in the following
@@ -71,22 +65,35 @@ hist(steps_per_day, col="lightblue",
                     main = "Total number of steps taken each day",
                     xlab = "Steps taken",
                     ylab = "Days")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 #Question 3:
 #We calculate the mean of steps taken per day:
 round(mean(steps_per_day), 2)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 #We calculate the median of steps taken per day:
 median(steps_per_day)
+```
 
+```
+## [1] 10765
 ```
 
 #What is the average daily activity pattern?
 1. Make a time series plot (i.e. **type = "l"** ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r echo = TRUE}
 
+```r
 #Question 1:
 #We should start by creating a subset of the data that contains only the rows
 #where no value is missing. But this subset was created in the first question of
@@ -101,7 +108,11 @@ steps_per_interval <- tapply(subset$steps, subset$interval, mean)
 plot(steps_per_interval, type = "l", lwd = 2, col = "blue",
      main = "Mean of steps taken in each 5-minute interval", font.main = 4,
      xlab = "Interval", ylab = "Steps taken")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
 #Question 2:
 #To conclude this section, we calculate which interval, contains the maximum
 #number of steps. We carry this out by finding the maximum of the variable
@@ -110,11 +121,20 @@ plot(steps_per_interval, type = "l", lwd = 2, col = "blue",
 #The maximum occurs in the following interval:
 maximum <- which.max(steps_per_interval)
 as.integer(names(steps_per_interval)[maximum])
+```
 
+```
+## [1] 835
+```
+
+```r
 #Although we are not asked explicitly in the problem definition, the maximum
 #number of steps is:
 round(max(steps_per_interval), 2)
+```
 
+```
+## [1] 206.17
 ```
 
 #Imputing missing values
@@ -125,8 +145,8 @@ Note that there are a number of days/intervals where there are missing values (c
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 4. Make a histogram of the total number of steps taken each day and calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r echo = TRUE}
 
+```r
 #Question 1:
 #In this question, we are asked to calculate the number of missing values in
 #our data.frame. This could have been done with "sum(is.na(raw_data))". But as
@@ -134,11 +154,23 @@ Note that there are a number of days/intervals where there are missing values (c
 #value is missing, we can calculate the dimensions of both and do the
 #subtraction (the first coordinate corresponds to the number of rows):
 dim(raw_data)[1] - dim(subset)[1]
+```
 
+```
+## [1] 2304
+```
+
+```r
 #It should be noted that all missing values are in the first column
 #(corresponding to the steps taken):
 sum(is.na(raw_data)) == sum(is.na(raw_data$steps))
+```
 
+```
+## [1] TRUE
+```
+
+```r
 #Questions 2 & 3:
 #In order to fill in the missing data, we are asked to choose a strategy. We
 #have decided to use the following: we will fill the missing values with the
@@ -181,20 +213,45 @@ hist(final_steps_per_day, col="lightblue",
                           main = "Total number of steps taken each day",
                           xlab = "Steps taken",
                           ylab = "Days")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
 #We calculate the final mean of steps taken per day:
 mean(final_steps_per_day)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 #We calculate the final median of steps taken per day:
 median(final_steps_per_day)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 #We calculate what is the impact of imputing missing data on the estimates of
 #the total daily number of steps. First we do it for the mean:
 mean(final_steps_per_day) - mean(steps_per_day)
+```
 
+```
+## [1] 0
+```
+
+```r
 #Finally, we do it for the median:
 median(final_steps_per_day) - median(steps_per_day)
+```
 
+```
+## [1] 1.188679
 ```
 
 
@@ -204,8 +261,8 @@ For this part the **weekdays()** function may be of some help here. Use the data
 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 2. Make a panel plot containing a time series plot (i.e. **type = "l"** ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r echo = TRUE}
 
+```r
 #Question 1:
 #In this question, we are asked to add a new factor type column to our
 #data.frame so that we can separate weekdays from weekends. For this, we are
@@ -248,5 +305,6 @@ plot(final_steps_per_interval[, 1], type = "l", lwd = 2, col = "blue",
 plot(final_steps_per_interval[, 2], type = "l", lwd = 2, col = "blue",
      main = "Mean of steps taken in each 5-minute interval (weekend)",
      font.main = 4, xlab = "Interval", ylab = "Steps taken", las = 1)
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
